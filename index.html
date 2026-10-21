@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boo There – Support &amp; Datenschutz</title>
+<meta name="description" content="Boo There: Baue dein Geisterhaus und erschrecke alle Gäste. Hilfe, Kontakt und Datenschutz.">
+<link rel="icon" href="assets/kasimir.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #120b1f;
+    --panel: rgba(28, 18, 44, 0.88);
+    --border: #5b3b8c;
+    --gold: #ffc94d;
+    --slime: #8be04e;
+    --text: #efe9ff;
+    --muted: #b9add6;
+    --link: #9fd8ff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Nunito", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--night);
+  }
+  /* Spukhaus im Hintergrund, nach unten in die Nacht verlaufend */
+  .backdrop {
+    position: fixed; inset: 0; z-index: -1;
+    background:
+      linear-gradient(180deg, rgba(18, 11, 31, 0.35) 0%, rgba(18, 11, 31, 0.85) 45%, var(--night) 85%),
+      url("assets/background.jpg") center top / cover no-repeat;
+  }
+  a { color: var(--link); }
+  a:hover { color: var(--gold); }
+
+  header { text-align: center; padding: 28px 16px 8px; position: relative; }
+  .lang {
+    position: absolute; top: 16px; right: 16px;
+    display: flex; gap: 6px;
+  }
+  .lang button {
+    font: inherit; font-weight: 800; font-size: 14px;
+    padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    color: var(--muted); background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border);
+  }
+  .lang button.active { color: #1d1230; background: var(--gold); border-color: var(--gold); }
+  .logo { width: min(460px, 82vw); filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.6)); }
+  .tagline { font-weight: 800; font-size: 20px; color: var(--gold); margin: 6px 0 18px; text-shadow: 0 2px 6px #000; }
+
+  nav {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 12px;
+    background: rgba(18, 11, 31, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+  nav a {
+    text-decoration: none; font-weight: 800; color: var(--text);
+    padding: 6px 16px; border-radius: 999px; border: 1px solid transparent;
+  }
+  nav a:hover { border-color: var(--gold); color: var(--gold); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 40px; }
+  section {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 26px 28px;
+    margin: 0 0 28px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45), inset 0 0 40px rgba(139, 224, 78, 0.04);
+    scroll-margin-top: 110px; /* Platz für die (auf dem Handy zweizeilige) Navigation */
+  }
+  h1, h2 {
+    font-family: "Creepster", "Nunito", cursive;
+    font-weight: 400;
+    color: var(--slime);
+    letter-spacing: 1px;
+    text-shadow: 0 3px 0 #2c1747, 0 0 18px rgba(139, 224, 78, 0.25);
+    margin: 0 0 12px;
+  }
+  h2 { font-size: 42px; line-height: 1.1; }
+  h3 { color: var(--gold); margin: 22px 0 6px; font-size: 19px; }
+  p { margin: 0 0 12px; }
+  ul { padding-left: 22px; margin: 0 0 12px; }
+  li { margin: 4px 0; }
+  .muted { color: var(--muted); font-size: 15px; }
+
+  .kasimir {
+    display: flex; gap: 18px; align-items: center;
+    background: rgba(0, 0, 0, 0.3); border-radius: 14px; padding: 14px 18px; margin: 14px 0 6px;
+  }
+  .kasimir img { width: 110px; flex: none; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6)); }
+  .kasimir p { margin: 0; font-style: italic; }
+
+  .guests { display: block; width: 100%; max-width: 640px; margin: 10px auto 4px; }
+  .scares {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin: 16px 0 4px;
+  }
+  .scares figure { margin: 0; text-align: center; }
+  .scares img { height: 120px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6)); }
+  .scares figcaption { font-size: 13px; color: var(--muted); font-weight: 700; }
+
+  .mail {
+    display: inline-block; font-weight: 800; font-size: 20px; text-decoration: none;
+    color: #1d1230; background: var(--gold); padding: 10px 22px; border-radius: 999px; margin: 6px 0 14px;
+    box-shadow: 0 4px 0 #b0801f;
+  }
+  .mail:hover { color: #1d1230; filter: brightness(1.08); }
+  details {
+    background: rgba(0, 0, 0, 0.28); border-radius: 12px; padding: 10px 16px; margin: 8px 0;
+    border: 1px solid rgba(91, 59, 140, 0.6);
+  }
+  summary { cursor: pointer; font-weight: 800; color: var(--text); }
+  details p { margin: 8px 0 4px; color: var(--muted); }
+
+  footer { text-align: center; padding: 10px 16px 40px; color: var(--muted); font-size: 15px; }
+  footer .boo { font-family: "Creepster", cursive; font-size: 26px; color: var(--slime); }
+
+  /* Sprache: nur die gewählte anzeigen */
+  html[lang="de"] [lang="en"], html[lang="en"] [lang="de"] { display: none !important; }
+
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    section { padding: 20px 18px; }
+    h2 { font-size: 34px; }
+    .kasimir { flex-direction: column; text-align: center; }
+    .lang { position: static; justify-content: center; margin-bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="backdrop"></div>
+
+<header id="top">
+  <div class="lang">
+    <button type="button" data-set-lang="de">Deutsch</button>
+    <button type="button" data-set-lang="en">English</button>
+  </div>
+  <img class="logo" src="assets/logo.png" alt="Boo There">
+  <p class="tagline">
+    <span lang="de">Support &amp; Datenschutz</span>
+    <span lang="en">Support &amp; Privacy</span>
+  </p>
+</header>
+
+<nav>
+  <a href="#about"><span lang="de">Über das Spiel</span><span lang="en">About</span></a>
+  <a href="#support"><span lang="de">Hilfe &amp; Kontakt</span><span lang="en">Help &amp; Contact</span></a>
+  <a href="#privacy"><span lang="de">Datenschutz</span><span lang="en">Privacy</span></a>
+</nav>
+
+<main>
+
+  <!-- ===================================================== Über das Spiel -->
+  <section id="about">
+    <div lang="de">
+      <h2>Was ist Boo There?</h2>
+      <p>Boo There ist ein Tower-Defense-Spiel mit Gänsehaut: Statt Türmen baust du dein eigenes Geisterhaus.
+        Stell Jumpscares, Monster, Killerclowns und Zombie-Gräber an den Weg und sorg dafür, dass jeder Gast
+        schreiend wieder herauskommt. Wer nicht genug Angst hatte, kostet dich ein Leben!</p>
+      <p>Jeder Gast hat Angst und Geduld. Bremse, erschrecke, unterhalte – und entdecke Kombos aus Scares,
+        die zusammen besonders gut wirken.</p>
+    </div>
+    <div lang="en">
+      <h2>What is Boo There?</h2>
+      <p>Boo There is tower defense with goosebumps: instead of towers, you build your very own haunted house.
+        Place jumpscares, monsters, killer clowns and zombie graves along the path and make sure every guest leaves
+        screaming. Anyone who wasn't scared enough costs you a life!</p>
+      <p>Every guest has fear and patience. Slow them down, scare them, entertain them – and discover combos of scares
+        that work especially well together.</p>
+    </div>
+
+    <img class="guests" src="assets/guests.png" alt="">
+
+    <div class="scares">
+      <figure><img src="assets/scare_jumpscare.png" alt=""><figcaption>Jumpscare</figcaption></figure>
+      <figure><img src="assets/scare_monster_closet.png" alt=""><figcaption><span lang="de">Monster</span><span lang="en">Monster</span></figcaption></figure>
+      <figure><img src="assets/scare_killer_clown.png" alt=""><figcaption><span lang="de">Killerclown</span><span lang="en">Killer Clown</span></figcaption></figure>
+      <figure><img src="assets/scare_zombie_grave.png" alt=""><figcaption><span lang="de">Zombie-Grab</span><span lang="en">Zombie Grave</span></figcaption></figure>
+      <figure><img src="assets/scare_pumpkin.png" alt=""><figcaption><span lang="de">Kürbislaterne</span><span lang="en">Jack-o'-Lantern</span></figcaption></figure>
+      <figure><img src="assets/scare_witch_cauldron.png" alt=""><figcaption><span lang="de">Hexenkessel</span><span lang="en">Witch's Cauldron</span></figcaption></figure>
+    </div>
+
+    <div class="kasimir">
+      <img src="assets/kasimir.png" alt="Kasimir">
+      <p lang="de">«Ich bin Kasimir! Ich zeig dir im Spiel alles Schritt für Schritt. Und wenn doch etwas klemmt – weiter unten findest du Hilfe.»</p>
+      <p lang="en">"I'm Kasimir! In the game I'll show you everything step by step. And if something's still stuck – you'll find help below."</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== Hilfe & Kontakt -->
+  <section id="support">
+    <div lang="de">
+      <h2>Hilfe &amp; Kontakt</h2>
+      <p>Fragen, Fehler gefunden oder eine Idee für einen neuen Scare? Schreib mir – ich lese jede Nachricht.
+        Hilfreich sind dein Gerät (z.B. iPhone 15), die iOS-Version, die App-Version (steht im App Store) und
+        eine kurze Beschreibung, was passiert ist.</p>
+    </div>
+    <div lang="en">
+      <h2>Help &amp; Contact</h2>
+      <p>Questions, found a bug or have an idea for a new scare? Write to me – I read every message.
+        It helps to include your device (e.g. iPhone 15), your iOS version, the app version (shown in the App Store)
+        and a short description of what happened.</p>
+    </div>
+
+    <a class="mail" href="mailto:ungricht@me.com?subject=Boo%20There">ungricht@me.com</a>
+
+    <div lang="de">
+      <h3>Häufige Fragen</h3>
+      <details>
+        <summary>Was ist kostenlos, was kostet die Vollversion?</summary>
+        <p>Das Tutorial und das ganze erste Kapitel (inklusive erstem Boss und erstem Rätsel) sind gratis.
+          Mit einem einmaligen Kauf der Vollversion schaltest du alle weiteren Level, Rätsel, Bosse und den
+          Endlos-Modus frei. Es gibt kein Abo und keine Werbung.</p>
+      </details>
+      <details>
+        <summary>Ich habe die Vollversion gekauft, aber sie ist nicht freigeschaltet.</summary>
+        <p>Tippe im Hauptmenü auf «Vollversion» und dann auf «Käufe wiederherstellen». Melde dich dafür mit
+          derselben Apple-ID an, mit der du gekauft hast. Der Kauf gilt auf allen deinen Geräten mit dieser Apple-ID.</p>
+      </details>
+      <details>
+        <summary>Wird mein Spielstand gespeichert?</summary>
+        <p>Ja, automatisch auf deinem Gerät. Er wird nicht zwischen Geräten übertragen, und wenn du die App
+          löschst, wird auch der Spielstand gelöscht. Die Vollversion kannst du jederzeit wiederherstellen.</p>
+      </details>
+      <details>
+        <summary>Wie stelle ich die Sprache um?</summary>
+        <p>Im Hauptmenü oben links auf «Sprache» tippen. Das Spiel gibt es auf Deutsch und Englisch.</p>
+      </details>
+      <details>
+        <summary>Ich komme in einem Level nicht weiter.</summary>
+        <p>Tippe auf eine Scare-Karte: Der Steckbrief zeigt, wofür sie gut ist und mit welchem Scare sie eine Kombo bildet.
+          Über das «?» neben den Karten siehst du alle Rollen. Mische verschiedene Scares – Gäste gewöhnen sich
+          an denselben Schreck. Und Wände lenken den Weg genau dorthin, wo deine Scares stehen.</p>
+      </details>
+    </div>
+    <div lang="en">
+      <h3>FAQ</h3>
+      <details>
+        <summary>What's free, and what does the full version cost?</summary>
+        <p>The tutorial and the whole first chapter (including the first boss and the first puzzle) are free.
+          A one-time purchase of the full version unlocks all further levels, puzzles, bosses and Endless Mode.
+          No subscription, no ads.</p>
+      </details>
+      <details>
+        <summary>I bought the full version, but it isn't unlocked.</summary>
+        <p>In the main menu, tap "Full version" and then "Restore purchases". Make sure you're signed in with the
+          same Apple ID you used to buy it. The purchase works on all your devices with that Apple ID.</p>
+      </details>
+      <details>
+        <summary>Is my progress saved?</summary>
+        <p>Yes, automatically on your device. It isn't transferred between devices, and deleting the app also deletes
+          your progress. You can restore the full version at any time.</p>
+      </details>
+      <details>
+        <summary>How do I change the language?</summary>
+        <p>In the main menu, tap "Language" in the top left. The game is available in English and German.</p>
+      </details>
+      <details>
+        <summary>I'm stuck on a level.</summary>
+        <p>Tap a scare card: its profile shows what it's good for and which scare it combos with. The "?" next to the
+          cards explains every role. Mix different scares – guests get used to the same fright. And walls steer the
+          path exactly to where your scares are.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===================================================== Datenschutz -->
+  <section id="privacy">
+    <div lang="de">
+      <h2>Datenschutz</h2>
+      <p class="muted">Stand: 21. Oktober 2026</p>
+      <p>Diese Datenschutzerklärung gilt für das Spiel «Boo There» für iPhone und iPad. Kurz gesagt:
+        <strong>Boo There sammelt keine persönlichen Daten.</strong></p>
+
+      <h3>Welche Daten wir erheben</h3>
+      <p>Für Boo There brauchst du kein Konto. Das Spiel fragt nicht nach deinem Namen, deiner E-Mail-Adresse oder
+        anderen persönlichen Angaben. Dein Spielstand (Level, Sterne, Schreckpunkte, Werkstatt-Käufe, Rekorde) und
+        deine Einstellungen (Sprache, Ton) werden nur lokal auf deinem Gerät gespeichert und nicht an uns übertragen.</p>
+
+      <h3>Keine Werbung, kein Tracking</h3>
+      <p>Boo There zeigt keine Werbung, verwendet keine Werbe- oder Analyse-Werkzeuge und verfolgt dich nicht über
+        andere Apps oder Websites hinweg.</p>
+
+      <h3>Käufe</h3>
+      <p>Die Vollversion kaufst du über den App Store von Apple. Die Zahlung wird vollständig von Apple abgewickelt;
+        es gelten die Datenschutzbestimmungen von Apple. Wir erhalten keine Zahlungs- oder Kontodaten. Die App erfährt
+        nur, ob die Vollversion gekauft wurde, und merkt sich das auf deinem Gerät.</p>
+
+      <h3>Keine Diagnosedaten</h3>
+      <p>Die App selbst sendet keine Nutzungs- oder Diagnosedaten. Nur wenn du in den Einstellungen deines Geräts der
+        Weitergabe von Analysedaten an Entwickler zugestimmt hast, stellt Apple uns anonyme Absturzberichte zur
+        Verfügung. Diese enthalten keine persönlichen Angaben.</p>
+
+      <h3>Kinder</h3>
+      <p>Boo There richtet sich an ein allgemeines Publikum. Da wir keine persönlichen Daten erheben, sammeln wir auch
+        keine Daten von Kindern.</p>
+
+      <h3>Deine Möglichkeiten</h3>
+      <p>Wenn du die App löschst, werden alle lokal gespeicherten Spieldaten entfernt. Die Weitergabe von
+        Analysedaten an Entwickler kannst du in den Einstellungen deines Geräts unter «Datenschutz &amp; Sicherheit»
+        jederzeit ändern.</p>
+
+      <h3>Änderungen</h3>
+      <p>Wenn sich diese Datenschutzerklärung ändert, findest du die neue Fassung auf dieser Seite, mit neuem Datum.</p>
+
+      <h3>Kontakt &amp; Verantwortlicher</h3>
+      <p>Fabian Ungricht, <a href="mailto:ungricht@me.com">ungricht@me.com</a></p>
+    </div>
+
+    <div lang="en">
+      <h2>Privacy Policy</h2>
+      <p class="muted">Last updated: October 21, 2026</p>
+      <p>This privacy policy applies to the game "Boo There" for iPhone and iPad. In short:
+        <strong>Boo There does not collect any personal data.</strong></p>
+
+      <h3>Information we collect</h3>
+      <p>You don't need an account to play Boo There. The game doesn't ask for your name, email address or any other
+        personal details. Your progress (levels, stars, scare points, workshop purchases, records) and your settings
+        (language, sound) are stored only locally on your device and are not sent to us.</p>
+
+      <h3>No ads, no tracking</h3>
+      <p>Boo There shows no ads, uses no advertising or analytics tools and does not track you across other apps or
+        websites.</p>
+
+      <h3>Purchases</h3>
+      <p>You buy the full version through Apple's App Store. Payment is handled entirely by Apple and is subject to
+        Apple's privacy policy. We don't receive any payment or account details. The app only learns whether the full
+        version has been purchased and remembers this on your device.</p>
+
+      <h3>No diagnostics</h3>
+      <p>The app itself sends no usage or diagnostic data. Only if you have agreed in your device settings to share
+        analytics with app developers does Apple provide us with anonymous crash reports. These contain no personal
+        information.</p>
+
+      <h3>Children</h3>
+      <p>Boo There is intended for a general audience. Since we don't collect personal data, we also don't collect any
+        data from children.</p>
+
+      <h3>Your choices</h3>
+      <p>Deleting the app removes all locally stored game data. You can change whether analytics are shared with app
+        developers at any time in your device settings under "Privacy &amp; Security".</p>
+
+      <h3>Changes to this policy</h3>
+      <p>If this privacy policy changes, the new version will be posted on this page with a new date.</p>
+
+      <h3>Contact &amp; data controller</h3>
+      <p>Fabian Ungricht, <a href="mailto:ungricht@me.com">ungricht@me.com</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="boo">Boo There</div>
+  <span lang="de">Erschrecke sie alle!</span><span lang="en">Scare them all!</span>
+  · <a href="#top"><span lang="de">Nach oben</span><span lang="en">Back to top</span></a>
+</footer>
+
+<script>
+  // Sprache: ?lang=de / ?lang=en, sonst gespeicherte Wahl, sonst Browsersprache
+  (function () {
+    var root = document.documentElement;
+    var param = new URLSearchParams(location.search).get("lang");
+    var saved = null;
+    try { saved = localStorage.getItem("lang"); } catch (e) {}
+    var lang = param || saved || ((navigator.language || "de").toLowerCase().indexOf("de") === 0 ? "de" : "en");
+    function apply(l) {
+      root.lang = l === "en" ? "en" : "de";
+      document.title = root.lang === "de" ? "Boo There – Support & Datenschutz" : "Boo There – Support & Privacy";
+      document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+        b.classList.toggle("active", b.getAttribute("data-set-lang") === root.lang);
+      });
+    }
+    document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var l = b.getAttribute("data-set-lang");
+        try { localStorage.setItem("lang", l); } catch (e) {}
+        apply(l);
+      });
+    });
+    apply(lang);
+  })();
+</script>
+</body>
+</html>
